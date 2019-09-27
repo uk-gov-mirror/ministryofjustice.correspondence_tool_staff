@@ -39,7 +39,8 @@ class Case::SAR::Offender < Case::Base
                  subject_full_name: :string,
                  subject_type: :string,
                  third_party_relationship: :string,
-                 third_party: :boolean
+                 third_party: :boolean,
+                 late_team_id: :integer
 
   enum subject_type: {
     offender: 'offender',
@@ -83,9 +84,8 @@ class Case::SAR::Offender < Case::Base
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
 
-  def set_subject
-    self.subject = subject_full_name
-  end
+  before_save :use_subject_as_requester,
+              if: -> { name.blank? }
 
   def validate_received_date
     super
@@ -113,6 +113,10 @@ class Case::SAR::Offender < Case::Base
     true
   end
 
+  def responding_team
+    managing_team # both responding and managing - Branston are the only team who work on offender SARs
+  end
+
   # This method is here to fix an issue with the gov_uk_date_fields
   # where the validation fails since the internal list of instance
   # variables lacks the date_of_birth field from the json properties
@@ -131,5 +135,15 @@ class Case::SAR::Offender < Case::Base
   # the case state should not change
   def allow_waiting_for_data_state?
     self.current_state == 'data_to_be_requested'
+  end
+
+  private
+
+  def set_subject
+    self.subject = subject_full_name
+  end
+
+  def use_subject_as_requester
+    self.name = self.subject_full_name
   end
 end
