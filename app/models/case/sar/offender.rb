@@ -40,6 +40,8 @@ class Case::SAR::Offender < Case::Base
                  subject_type: :string,
                  third_party_relationship: :string,
                  third_party: :boolean,
+                 third_party_reference: :string,
+                 third_party_company_name: :string,
                  late_team_id: :integer
 
   enum subject_type: {
@@ -136,6 +138,7 @@ class Case::SAR::Offender < Case::Base
   def allow_waiting_for_data_state?
     self.current_state == 'data_to_be_requested'
   end
+
 
   private
 

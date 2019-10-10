@@ -37,7 +37,9 @@ FactoryBot.define do
 
   trait :third_party do
     third_party { true }
-    third_party_relationship { 'Aunt' }
+    third_party_relationship { 'Solicitor' }
+    third_party_reference { 'FOOG1234' }
+    third_party_company_name { 'Foogle and Sons Solicitors at Law' }
   end
 
   trait :data_to_be_requested do
@@ -106,8 +108,11 @@ FactoryBot.define do
       identifier { 'Closed Offender SAR' }
     end
 
+    received_date  { 22.business_days.ago }
+    date_responded { 4.business_days.ago }
+
     after(:create) do |kase|
-      create :case_transition_closed, case: kase
+      create :case_transition_close, case: kase
       kase.reload
     end
   end

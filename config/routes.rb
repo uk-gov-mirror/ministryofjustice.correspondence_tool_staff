@@ -156,7 +156,10 @@ Rails.application.routes.draw do
       patch :flag_for_clearance
     end
 
+    resource :cover_page, only: [:show], path: "cover-page"
     resources :data_requests
+
+    resource :letters, only: [:new, :show], path: "letters/:type"
   end
 
   # Case Behaviours (awaiting move to module Cases)

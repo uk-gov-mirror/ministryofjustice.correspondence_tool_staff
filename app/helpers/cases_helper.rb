@@ -122,6 +122,21 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               new_case_data_request_path(@case),
               id: 'action--record-data-request',
               class: "button-#{btn_type}"
+    when :send_acknowledgement_letter
+      link_to 'Send acknowledgement letter',
+              new_case_letters_path(@case.id, "acknowledgement"),
+              id: 'action--send-acknowledgement-letter',
+              class: 'button-secondary'
+    when :send_dispatch_letter
+      link_to 'Send dispatch letter',
+              new_case_letters_path(@case.id, "dispatch"),
+              id: 'action--send-dispatch-letter',
+              class: 'button-secondary'
+    when :preview_cover_page
+      link_to 'Preview cover page',
+              case_cover_page_path(@case),
+              id: 'action--preview-cover-page',
+              class: 'button-secondary'
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength

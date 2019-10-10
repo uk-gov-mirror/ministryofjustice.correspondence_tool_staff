@@ -587,6 +587,40 @@ ALTER SEQUENCE public.feedback_id_seq OWNED BY public.feedback.id;
 
 
 --
+-- Name: letter_templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.letter_templates (
+    id integer NOT NULL,
+    name character varying,
+    abbreviation character varying,
+    body character varying,
+    template_type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: letter_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.letter_templates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: letter_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.letter_templates_id_seq OWNED BY public.letter_templates.id;
+
+
+--
 -- Name: linked_cases; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -632,7 +666,8 @@ CREATE TABLE public.report_types (
     sar boolean DEFAULT false,
     standard_report boolean DEFAULT false NOT NULL,
     default_reporting_period character varying DEFAULT 'year_to_date'::character varying,
-    etl boolean DEFAULT false
+    etl boolean DEFAULT false,
+    offender_sar boolean DEFAULT false
 );
 
 
@@ -1137,6 +1172,13 @@ ALTER TABLE ONLY public.feedback ALTER COLUMN id SET DEFAULT nextval('public.fee
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.letter_templates ALTER COLUMN id SET DEFAULT nextval('public.letter_templates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.linked_cases ALTER COLUMN id SET DEFAULT nextval('public.linked_cases_id_seq'::regclass);
 
 
@@ -1320,6 +1362,14 @@ ALTER TABLE ONLY public.data_requests
 
 ALTER TABLE ONLY public.feedback
     ADD CONSTRAINT feedback_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: letter_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.letter_templates
+    ADD CONSTRAINT letter_templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -1599,6 +1649,13 @@ CREATE INDEX index_data_requests_on_case_id_and_user_id ON public.data_requests 
 --
 
 CREATE INDEX index_data_requests_on_user_id ON public.data_requests USING btree (user_id);
+
+
+--
+-- Name: index_letter_templates_on_abbreviation; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_letter_templates_on_abbreviation ON public.letter_templates USING btree (abbreviation);
 
 
 --
@@ -1929,6 +1986,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190609185907'),
 ('20190730133328'),
 ('20190731151806'),
-('20190817185027');
+('20190817185027'),
+('20190912142741'),
+('20191002003615');
 
 
