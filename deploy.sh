@@ -88,7 +88,7 @@ function _deploy() {
   p "Docker image: \e[32m$image_tag\e[0m"
   p "Target namespace: \e[32m$namespace\e[0m"
   p "--------------------------------------------------"
-return 0;
+
   if [[ $environment == "production" ]]
   then
     read -p "Do you wish to deploy this image to production? (Enter 'deploy' to continue): " confirmation_message
