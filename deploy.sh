@@ -66,11 +66,17 @@ function _deploy() {
       ;;
     *)
       p "\e[31mFatal error: deployment environment not recognised: $2\e[0m"
-    p "\e[31mEnvironment must be one of dev | staging | demo | qa | production\e[0m\n"
+      p "\e[31mEnvironment must be one of dev | staging | demo | qa | production\e[0m\n"
       echo "$usage"
       return 0
       ;;
   esac
+
+  if grep -rq "\x0GITCRYPT" config/kubernetes/qa/secrets.yaml; then
+    p "\e[31mFatal error: repository is locked with git-crypt\e[0m"
+    p "\e[31mUnlock using 'git-crypt unlock'\e[0m\n"
+    return 0
+  fi
 
   # Confirm what's going to happen and ask for confirmation
   docker_image_tag=${docker_registry}:${image_tag}
@@ -82,7 +88,7 @@ function _deploy() {
   p "Docker image: \e[32m$image_tag\e[0m"
   p "Target namespace: \e[32m$namespace\e[0m"
   p "--------------------------------------------------"
-
+return 0;
   if [[ $environment == "production" ]]
   then
     read -p "Do you wish to deploy this image to production? (Enter 'deploy' to continue): " confirmation_message
