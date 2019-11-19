@@ -79,7 +79,7 @@ function _deploy() {
   p "--------------------------------------------------"
   p "Deploying Track a Query to kubernetes cluster: $context"
   p "Environment: \e[32m$environment\e[0m"
-  p "Docker image: \e[32m$docker_image_tag\e[0m"
+  p "Docker image: \e[32m$image_tag\e[0m"
   p "Target namespace: \e[32m$namespace\e[0m"
   p "--------------------------------------------------"
 
