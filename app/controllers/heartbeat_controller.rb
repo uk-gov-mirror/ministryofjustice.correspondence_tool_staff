@@ -9,7 +9,7 @@ class HeartbeatController < ApplicationController
       build_date: Settings.build_date,
       git_commit: Settings.git_commit,
       git_source: Settings.git_source,
-      colour: "green"
+      colour: "red"
     }
 
     render json: version_info
