@@ -65,6 +65,11 @@ module Stats
           create :closed_case, :fully_refused_exempt_s22a
         end
 
+        # cases to be ignored in this report
+        Timecop.freeze @frozen_time - 30.days do
+          3.times { create :sar_case }
+        end
+
         # cases created and closed in this quarter but out of time against the external deadline
         Timecop.freeze @frozen_time - 30.days do
           3.times { create :closed_case, :granted_in_full, date_responded: 2.days.ago}

@@ -92,6 +92,7 @@ class Case::Base < ApplicationRecord
   scope :closed, ->       { where(current_state: 'closed')}
   scope :presented_as_closed, -> { where(current_state: 'closed').or(where(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed])) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
+  scope :any_foi, -> { where('type LIKE ?', "Case::FOI%") }
   scope :ico_appeal, ->   { where(type: ['Case::ICO::FOI', 'Case::ICO::SAR'])}
   scope :overturned_ico, -> { where(type: ['Case::OverturnedICO::FOI',
                                            'Case::OverturnedICO::SAR'])}

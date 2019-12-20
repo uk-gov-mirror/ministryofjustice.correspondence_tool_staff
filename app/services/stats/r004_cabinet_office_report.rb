@@ -152,8 +152,8 @@ module Stats
       end
     end
 
-    def get_value_1_A
-      cases_received_in_period.count
+    def get_value_1_A # SHOULD BE FOI CASES
+      cases_received_in_period.any_foi.count
     end
 
     def get_value_1_Ai
@@ -161,7 +161,7 @@ module Stats
     end
 
     def get_value_1_B
-      open_cases_received_in_period.count
+      open_cases_received_in_period.any_foi.count
     end
 
     def get_value_1_Bi
@@ -175,7 +175,7 @@ module Stats
     end
 
     def get_value_1_Biii
-      open_cases_received_in_period.where("properties->>'external_deadline' < ?", @period_end).count
+      open_cases_received_in_period.any_foi.where("properties->>'external_deadline' < ?", @period_end).count
     end
 
     def get_value_1_C
