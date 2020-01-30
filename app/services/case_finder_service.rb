@@ -40,15 +40,16 @@ class CaseFinderService
     self
   end
 
-  def closed_cases_scope
-    closed_scope = scope.presented_as_closed
-    if user.responder_only?
-      case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
-      closed_scope.where(id: case_ids).most_recent_first
-    else
-      closed_scope.most_recent_first
-    end
-  end
+  # Commented to find out where closed_cases_scope is coming from...
+  # def closed_cases_scope
+  #   closed_scope = scope.presented_as_closed
+  #   if user.responder_only?
+  #     case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
+  #     closed_scope.where(id: case_ids).most_recent_first
+  #   else
+  #     closed_scope.most_recent_first
+  #   end
+  # end
 
   private
 
