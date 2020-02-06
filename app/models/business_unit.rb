@@ -148,7 +148,15 @@ class BusinessUnit < Team
     users.any?
   end
 
+  def previous_teams
+     get_previous(id)
+  end
+
   private
+
+  def get_previous(of_this_team_id)
+    Team.find_by moved_to_unit: (Team.find_by id: of_this_team_id)
+  end
 
   def update_search_index
     if changed.include?('name')

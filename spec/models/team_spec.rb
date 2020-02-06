@@ -311,4 +311,26 @@ RSpec.describe Team, type: :model do
       expect(bu.original_team_name).to eq 'The Avengers'
     end
   end
+
+  describe 'scope historical_teams' do
+    it 'returns nil when the current team has never moved' do
+      current_team = create :business_unit
+      expect(current_team.previous_teams).to be_nil
+    end
+
+    let(:original_dir) { find_or_create :directorate }
+    let(:target_dir) { find_or_create :directorate }
+    let(:service) { TeamMoveService.new(previous_team, target_dir) }
+    let(:previous_team) {
+      find_or_create(
+        :business_unit,
+        directorate: original_dir,
+        )
+    }
+    it 'returns team(s) moved-from' do
+      service.call
+      current_team = service.new_team
+      expect(current_team.previous_teams).to include(previous_team)
+    end
+  end
 end
