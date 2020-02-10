@@ -327,10 +327,14 @@ RSpec.describe Team, type: :model do
         directorate: original_dir,
         )
     }
-    it 'returns team(s) moved-from' do
+    it 'returns team moved-from' do
       service.call
       current_team = service.new_team
-      expect(current_team.previous_teams).to include(previous_team)
+      expect(current_team.previous_teams.id).to eq(previous_team.id)
+    end
+    it 'gets more than 1 move' do
+      #TODO: Write a multiple history test
+
     end
   end
 end
