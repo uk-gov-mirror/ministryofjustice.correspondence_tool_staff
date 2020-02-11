@@ -318,13 +318,14 @@ workflows:
       - rspec-tests:
           requires:
             - build-test-container
-      - upload-coverage:
-          requires:
-            - rspec-tests
-            - other-tests
+      # - upload-coverage:
+      #     requires:
+      #       - rspec-tests
+      #       - other-tests
       - build-app-container:
           requires:
-            - upload-coverage
+            - other-tests
+            - rspec-tests
       - auto-deploy-development:
           requires:
             - build-test-container
