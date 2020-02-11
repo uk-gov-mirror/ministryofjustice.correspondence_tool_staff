@@ -218,12 +218,6 @@ jobs:
       - *load-db
       - *attach-tmp-workspace
       - *rspec
-      - persist_to_workspace:
-          root: tmp
-          paths:
-            - coverage/codeclimate.*.json
-      - store_artifacts:
-          path: tmp/coverage
 
   other-tests:
     executor: test-executor
