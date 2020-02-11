@@ -149,13 +149,22 @@ class BusinessUnit < Team
   end
 
   def previous_teams
-     get_previous(id)
+    # get_previous(id)
+    teams_array = []
+    has_previous  = get_previous(id)
+    while has_previous do
+      teams_array << has_previous
+      check_this = get_previous(has_previous)
+      has_previous = check_this unless check_this.nil?
+    end
+    teams_array
   end
 
   private
 
   def get_previous(of_this_team_id)
-    Team.find_by moved_to_unit: (Team.find_by id: of_this_team_id)
+    the_previous = Team.find_by moved_to_unit: (Team.find_by id: of_this_team_id)
+    the_previous.id unless the_previous.nil?
   end
 
   def update_search_index
