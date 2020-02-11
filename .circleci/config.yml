@@ -93,8 +93,8 @@ references:
       name: Run rspec tests
       command: |
         ls -al
-        bundle exec rspec ./spec/models/*
-        tmp/cc-test-reporter format-coverage -t simplecov -o "tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+        bundle exec rspec ./spec
+#       tmp/cc-test-reporter format-coverage -t simplecov -o "tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
 
 #      command: |
 #        tmp/cc-test-reporter before-build
@@ -128,7 +128,7 @@ executors:
   test-executor:
     working_directory: ~/repo
     docker:
-      - image: circleci/ruby:2.6.5-node-browsers
+      - image: circleci/ruby:2.5.1-node-browsers
         environment:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:circleci@127.0.0.1:5432/correspondence_platform_test
