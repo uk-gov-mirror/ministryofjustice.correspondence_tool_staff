@@ -317,5 +317,38 @@ RSpec.describe BusinessUnit, type: :model do
 
   end
 
+  describe 'scope historical_teams' do
+    it 'returns empty array when the current team has never moved' do
+      current_team = create :business_unit
+      expect(current_team.previous_teams).to be_empty
+    end
+
+    let(:original_dir) { find_or_create :directorate }
+    let(:target_dir) { find_or_create :directorate }
+    let(:service) { TeamMoveService.new(previous_team, target_dir) }
+    let(:previous_team) {
+      find_or_create(
+        :business_unit,
+        directorate: original_dir,
+        )
+    }
+    it 'returns team moved-from' do
+      service.call
+      current_team = service.new_team
+      expect(current_team.previous_teams).to include(previous_team.id)
+    end
+    let(:final_target_dir) { find_or_create :directorate}
+
+    it 'gets more than 1 move' do
+      #TODO: Write a multiple history test
+      original_team = previous_team
+
+      service.call
+      previous_team = service.new_team
+      service.call
+      current_team = service.new_team
+      expect(current_team.previous_teams).to include(previous_team.id)
+    end
+  end
 
 end

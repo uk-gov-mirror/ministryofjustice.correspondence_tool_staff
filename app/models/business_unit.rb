@@ -155,7 +155,7 @@ class BusinessUnit < Team
     while has_previous do
       teams_array << has_previous
       check_this = get_previous(has_previous)
-      has_previous = check_this unless check_this.nil?
+      has_previous = check_this
     end
     teams_array
   end
