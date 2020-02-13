@@ -149,22 +149,19 @@ class BusinessUnit < Team
   end
 
   def previous_teams
-    # get_previous(id)
-    teams_array = []
-    has_previous  = get_previous(id)
-    while has_previous do
-      teams_array << has_previous
-      check_this = get_previous(has_previous)
-      has_previous = check_this
+    previous_team_ids = []
+    previous_team = previous_incarnation(id)
+    while previous_team do
+      previous_team_ids << previous_team.id
+      previous_team = previous_incarnation(previous_team.id)
     end
-    teams_array
+    previous_team_ids
   end
 
   private
 
-  def get_previous(of_this_team_id)
-    the_previous = Team.find_by moved_to_unit: (Team.find_by id: of_this_team_id)
-    the_previous.id unless the_previous.nil?
+  def previous_incarnation(id)
+    Team.find_by_moved_to_unit_id(id)
   end
 
   def update_search_index
