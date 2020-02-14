@@ -351,9 +351,9 @@ RSpec.describe BusinessUnit, type: :model do
       tms = TeamMoveService.new(first_team, first_target_dir)
       tms.call
       second_team = tms.new_team
-      byebug
-      second_team.correspondence_type_roles = first_team.correspondence_type_roles
-      second_team.save!
+
+      # pause momentarily to let the database catch up
+      sleep 1
 
       tms2 = TeamMoveService.new(second_team, second_target_dir)
       tms2.call
