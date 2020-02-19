@@ -340,8 +340,6 @@ RSpec.describe BusinessUnit, type: :model do
 
     let(:first_target_dir) { find_or_create :directorate }
     let(:second_target_dir) { find_or_create :directorate }
-    let(:service_first_move) { TeamMoveService.new(business_unit_to_move, first_target_dir) }
-    let(:service_second_move) { TeamMoveService.new(business_unit_to_move, second_target_dir) }
     let(:business_unit_to_move) {
       find_or_create(
         :business_unit,
@@ -350,23 +348,19 @@ RSpec.describe BusinessUnit, type: :model do
 
     fit 'tracks all history' do
       first_team = business_unit_to_move
-      first_team_id = first_team.id
       tms = TeamMoveService.new(first_team, first_target_dir)
       tms.call
-      first_team_moved_to = first_team.moved_to_unit_id
       second_team = tms.new_team
-      second_team_id = second_team.id
+
+      # pause momentarily to let the database catch up
+      sleep 1
+
       tms2 = TeamMoveService.new(second_team, second_target_dir)
       tms2.call
-      second_team_moved_to = second_team.moved_to_unit_id
+
       third_team = tms2.new_team
-      third_team_id = third_team.id
-      array_of_previous_team_ids = third_team.previous_teams
 
-      expect(array_of_previous_team_ids).to include(second_team_id)
-      expect(array_of_previous_team_ids).to include(first_team_id)
-
-
+      expect(third_team.previous_teams).to match_array [first_team.id, second_team.id]
     end
 
   end
