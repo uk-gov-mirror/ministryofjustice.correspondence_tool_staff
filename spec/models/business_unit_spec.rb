@@ -497,26 +497,26 @@ RSpec.describe BusinessUnit, type: :model do
       let(:joining_team) { create(:responding_team, name: "Joining Team") }
       let(:original_target_team) { create(:responding_team, name: "Target Team") }
 
-      fit 'retrieves user roles' do
+      fit 'assigns current and historic user roles for teams with history' do
         joining_team_user = joining_team.users.first
         original_target_team_user = original_target_team.users.first
 
-        # move the original target team to create the target team
         service = TeamMoveService.new(original_target_team, first_target_dir)
         service.call
         target_team = service.new_team
-
-        expect(original_target_team_user.reload.teams).to match_array [
-          original_target_team, target_team
-        ]
-
-        expect(target_team.users).to match_array [original_target_team_user]
 
         service = TeamJoinService.new(joining_team, target_team)
         service.call
 
         expect(target_team.reload.users).to match_array [joining_team_user, original_target_team_user]
-        expect(original_target_team_user.reload.teams).to include joining_team
+
+        expect(original_target_team_user.reload.teams).to match_array [
+          original_target_team, target_team, joining_team
+        ]
+
+        expect(joining_team_user.reload.teams).to match_array [
+          original_target_team, target_team, joining_team
+        ]
 
         historic_teams = target_team.reload.historic_user_roles.collect {|t| t.team }.uniq
         expect(historic_teams).to match_array [original_target_team, joining_team]
