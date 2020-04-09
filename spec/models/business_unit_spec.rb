@@ -497,7 +497,7 @@ RSpec.describe BusinessUnit, type: :model do
       let(:joining_team) { create(:responding_team, name: "Joining Team") }
       let(:original_target_team) { create(:responding_team, name: "Target Team") }
 
-      fit 'assigns current and historic user roles for teams with history' do
+      it 'assigns current and historic user roles for teams with history' do
         joining_team_user = joining_team.users.first
         original_target_team_user = original_target_team.users.first
 
@@ -508,7 +508,7 @@ RSpec.describe BusinessUnit, type: :model do
         service = TeamJoinService.new(joining_team, target_team)
         service.call
 
-        expect(target_team.reload.users).to match_array [joining_team_user, original_target_team_user]
+        expect(target_team.reload.responders).to match_array [joining_team_user, original_target_team_user]
 
         expect(original_target_team_user.reload.teams).to match_array [
           original_target_team, target_team, joining_team
