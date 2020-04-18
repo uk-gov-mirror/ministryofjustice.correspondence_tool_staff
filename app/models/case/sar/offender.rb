@@ -26,7 +26,6 @@ class Case::SAR::Offender < Case::Base
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
-                 date_of_birth: :date,
                  escalation_deadline: :date,
                  external_deadline: :date,
                  flag_as_high_profile: :boolean,
