@@ -12,13 +12,19 @@ namespace :db do
     Rake::Task['db:structure_load'].invoke
     Rake::Task['data:migrate'].invoke
   end
-  
+
   task :structure_load => :environment do
     structure_file = "#{Rails.root}/db/structure.sql"
-    command = "psql -d correspondence_platform_development < #{structure_file}"
+
+    command = if ENV["DATABASE_URL"]
+      "psql #{ENV["DATABASE_URL"]} < #{structure_file}"
+    else
+      "psql -d correspondence_platform_development < #{structure_file}"
+    end
+
     system command
   end
- 
+
   def clear_database
     conn = ActiveRecord::Base.connection
     tables = conn.tables
