@@ -2,7 +2,7 @@ class DatabaseAnonymizer
 
   $arel_silence_type_casting_deprecation = true
 
-  CLASSES_TO_ANONYMISE = [ Case, User, CaseTransition ]
+  CLASSES_TO_ANONYMISE = [ Case::Base, User, CaseTransition ]
 
   def initialize(filename)
     @filename = File.expand_path(filename)
@@ -18,7 +18,7 @@ class DatabaseAnonymizer
   def anonymise_class(klass)
     File.open(@filename, 'a') do |fp|
       klass.find_each(batch_size: @batch_size) do |object|
-        insert_statement = if object.is_a?(Case)
+        insert_statement = if object.is_a?(Case::Base)
                              insert_stmt_for_case(object)
                            elsif object.is_a?(User)
                              insert_stmt_for_user(object)
