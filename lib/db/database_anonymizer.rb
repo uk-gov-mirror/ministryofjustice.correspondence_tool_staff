@@ -19,11 +19,14 @@ class DatabaseAnonymizer
     File.open(@filename, 'a') do |fp|
       klass.find_each(batch_size: @batch_size) do |object|
         insert_statement = if object.is_a?(Case::Base)
-                             insert_stmt_for_case(object)
+                             kase = anonymize_case(object)
+                             insert_stmt(kase, attrs_without_properties(kase))
                            elsif object.is_a?(User)
-                             insert_stmt_for_user(object)
+                             user = anonymize_user(object)
+                             insert_stmt(user, user.attribute_names)
                            elsif object.is_a?(CaseTransition)
-                             insert_stmt_for_case_transition(object)
+                             ct = anonymise_case_transition(object)
+                             insert_stmt(ct, attrs_without_metadata(ct))
                            else
                              raise "Unexpected object #{object.class}"
 
@@ -43,39 +46,19 @@ class DatabaseAnonymizer
     attrs
   end
 
-  def insert_stmt_for_case(object)
-    type_caster = object.class.arel_table.send(:type_caster)
-    kase = anonymize_case(object)
-    kase.class.arel_table.create_insert.tap { |im|
-      values = attributes_with_values(kase, attrs_without_properties(kase))
-      values.each do |attribute, value|
-        values[attribute] = type_caster.type_cast_for_database(attribute.name, value)
-      end
-      im.insert(values)
-    }.to_sql + ';'
+  def cast_value_types_for_db(values, casting_type)
+    type_caster = casting_type.arel_table.send(:type_caster)
+    values.each do |attribute, value|
+      values[attribute] = type_caster.type_cast_for_database(attribute.name, value)
+    end
+    values
   end
 
-  def insert_stmt_for_user(object)
-    type_caster = object.class.arel_table.send(:type_caster)
-    user = anonymize_user(object)
-    user.class.arel_table.create_insert.tap { |im|
-      values = attributes_with_values(user, user.attribute_names)
-      values.each do |attribute, value|
-        values[attribute] = type_caster.type_cast_for_database(attribute.name, value)
-      end
-      im.insert(values)
-    }.to_sql + ';'
-  end
+  def insert_stmt(anon_object, attributes)
+    anon_object.class.arel_table.create_insert.tap { |im|
+      values = attributes_with_values(anon_object, attributes)
 
-  def insert_stmt_for_case_transition(object)
-    type_caster = object.class.arel_table.send(:type_caster)
-    ct = anonymise_case_transition(object)
-    ct.class.arel_table.create_insert.tap { |im|
-      values = attributes_with_values(ct, attrs_without_metadata(ct))
-      values.each do |attribute, value|
-        values[attribute] = type_caster.type_cast_for_database(attribute.name, value)
-      end
-      im.insert(values)
+      im.insert(cast_value_types_for_db(values, anon_object.class))
     }.to_sql + ';'
   end
 
@@ -86,7 +69,6 @@ class DatabaseAnonymizer
   def attrs_without_metadata(object)
     object.attribute_names - object.metadata.keys
   end
-
 
   def anonymize_user(user)
     unless user.email =~ /@digital.justice.gov.uk$/
