@@ -33,25 +33,49 @@ class DatabaseAnonymizer
     end
   end
 
+  def attributes_with_values(model, attribute_names)
+    attrs = {}
+    arel_table = model.class.arel_table
+
+    attribute_names.each do |name|
+      attrs[arel_table[name]] = model._read_attribute(name)
+    end
+    attrs
+  end
 
   def insert_stmt_for_case(object)
+    type_caster = object.class.arel_table.send(:type_caster)
     kase = anonymize_case(object)
     kase.class.arel_table.create_insert.tap { |im|
-      im.insert(kase.send(:arel_attributes_with_values_for_create, attrs_without_properties(kase)))
+      values = attributes_with_values(kase, attrs_without_properties(kase))
+      values.each do |attribute, value|
+        values[attribute] = type_caster.type_cast_for_database(attribute.name, value)
+      end
+      im.insert(values)
     }.to_sql + ';'
   end
 
   def insert_stmt_for_user(object)
+    type_caster = object.class.arel_table.send(:type_caster)
     user = anonymize_user(object)
     user.class.arel_table.create_insert.tap { |im|
-      im.insert(user.send(:arel_attributes_with_values_for_create, user.attribute_names))
+      values = attributes_with_values(user, user.attribute_names)
+      values.each do |attribute, value|
+        values[attribute] = type_caster.type_cast_for_database(attribute.name, value)
+      end
+      im.insert(values)
     }.to_sql + ';'
   end
 
   def insert_stmt_for_case_transition(object)
+    type_caster = object.class.arel_table.send(:type_caster)
     ct = anonymise_case_transition(object)
     ct.class.arel_table.create_insert.tap { |im|
-      im.insert(ct.send(:arel_attributes_with_values_for_create, attrs_without_metadata(ct)))
+      values = attributes_with_values(ct, attrs_without_metadata(ct))
+      values.each do |attribute, value|
+        values[attribute] = type_caster.type_cast_for_database(attribute.name, value)
+      end
+      im.insert(values)
     }.to_sql + ';'
   end
 
