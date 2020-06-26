@@ -55,11 +55,12 @@ class DatabaseAnonymizer
   end
 
   def insert_stmt(anon_object, attributes)
-    anon_object.class.arel_table.create_insert.tap { |im|
+    sql = anon_object.class.arel_table.create_insert.tap { |im|
       values = attributes_with_values(anon_object, attributes)
 
       im.insert(cast_value_types_for_db(values, anon_object.class))
-    }.to_sql.gsub('"', '')  + ';'
+    }.to_sql.gsub('"','\'') + ';'
+    binding.pry
   end
 
   def attrs_without_properties(object)
