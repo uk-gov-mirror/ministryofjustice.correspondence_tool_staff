@@ -59,7 +59,7 @@ class DatabaseAnonymizer
       values = attributes_with_values(anon_object, attributes)
 
       im.insert(cast_value_types_for_db(values, anon_object.class))
-    }.to_sql + ';'
+    }.to_sql.gsub('"', '')  + ';'
   end
 
   def attrs_without_properties(object)
@@ -72,6 +72,7 @@ class DatabaseAnonymizer
 
   def anonymize_user(user)
     unless user.email =~ /@digital.justice.gov.uk$/
+      user.encrypted_password = '$2a$11$A9oQG5ThfM3rqTGOp4.K4.6xuTYW1wJwhZqZYL4mzia0HzLNAMbNm'
       user.full_name = Faker::Name.unique.name
       user.email = Faker::Internet.email(name: user.full_name)
     end
