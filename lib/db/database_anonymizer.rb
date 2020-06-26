@@ -85,7 +85,7 @@ class DatabaseAnonymizer
     kase.subject = initial_letters(kase.subject) + Faker::Company.catch_phrase
     kase.message = Faker::Lorem.paragraph
     kase.postal_address = fake_address unless kase.postal_address.blank?
-    kase.subject_full_name = kase.name
+    kase.subject_full_name = kase.name if kase.respond_to?(:subject_full_name)
     kase
   end
 
