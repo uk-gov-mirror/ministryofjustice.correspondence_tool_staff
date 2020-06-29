@@ -38,6 +38,13 @@ namespace :db do
         LetterTemplateSeeder.new.seed!
       end
 
+      desc 'Seed correspondence types'
+      task :types => :environment do
+        require File.join(Rails.root, 'db', 'seeders', 'correspondence_type_seeder')
+        puts 'Seeding Correspondence Types'
+        CorrespondenceTypeSeeder.new.seed!
+      end
+
       desc 'Seed teams for production environment'
       task :teams => :environment do
         require File.join(Rails.root, 'db', 'seeders', 'team_seeder')

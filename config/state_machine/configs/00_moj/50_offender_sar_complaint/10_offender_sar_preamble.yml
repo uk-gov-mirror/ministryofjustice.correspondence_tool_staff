@@ -1,0 +1,24 @@
+#########################################################################
+#                                                                       #
+#                             OFFENDER SAR                              #
+#                                                                       #
+#########################################################################
+  offender_sar_complaint:
+    name: Offender Subject Access Request Complaint
+    permitted_workflows:
+      - standard
+      - trigger
+
+    permitted_user_roles:
+      - manager
+      - responder
+      - approver
+
+    permitted_states:
+      - data_to_be_requested
+      - waiting_for_data
+      - ready_for_vetting
+      - vetting_in_progress
+      - ready_to_copy
+      - ready_to_dispatch
+      - closed
