@@ -26,6 +26,7 @@ module OffenderSARCasesParams
       :third_party_relationship,
       :third_party_reference,
       :third_party_company_name,
+      :request_dated_dd, :request_dated_mm, :request_dated_yyyy,
       :reply_method,
       uploaded_request_files: [],
       )

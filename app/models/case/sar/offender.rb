@@ -20,6 +20,7 @@ class Case::SAR::Offender < Case::Base
     date_responded
     date_draft_compliant
     external_deadline
+    request_dated
     received_date
   ].freeze
 
@@ -38,6 +39,7 @@ class Case::SAR::Offender < Case::Base
                  previous_case_numbers: :string,
                  prison_number: :string,
                  reply_method: :string,
+                 request_dated: :date,
                  subject_address: :string,
                  subject_aliases: :string,
                  subject_full_name: :string,
@@ -88,6 +90,9 @@ class Case::SAR::Offender < Case::Base
 
   validate :validate_date_of_birth
   validate :validate_received_date
+
+  validate :validate_request_dated
+
   validate :validate_third_party_names
 
   before_validation :reassign_gov_uk_dates
@@ -98,6 +103,16 @@ class Case::SAR::Offender < Case::Base
 
   def validate_received_date
     super
+  end
+
+  def validate_request_dated
+    if request_dated.present? && self.request_dated > Date.today
+      errors.add(
+        :request_dated,
+        I18n.t('activerecord.errors.models.case.attributes.request_dated.not_in_future')
+      )
+    end
+    errors[:request_dated].any?
   end
 
   def validate_date_of_birth
