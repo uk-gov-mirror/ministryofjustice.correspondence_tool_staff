@@ -91,9 +91,9 @@ feature 'Offender SAR Case creation by a manager', js: true do
     expect(cases_page).to have_new_case_button
     cases_page.new_case_button.click
     expect(cases_new_page).to be_displayed
-
-    cases_new_page.create_link_for_correspondence('OFFENDER-SAR').click
-    expect(cases_new_offender_sar_subject_details_page).to be_displayed
+byebug
+    cases_new_page.create_link_for_correspondence('OFFENDER-SAR-COMPLAINT').click
+    expect(cases_new_offender_sar_complaint_subject_details_page).to be_displayed
   end
 
   def and_fill_in_subject_details_page
