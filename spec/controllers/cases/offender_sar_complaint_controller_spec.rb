@@ -63,13 +63,12 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     it 'renders the new template with a form object' do
       get :new, params: params
       expect(response).to render_template(:new)
-      expect(assigns(:case)).to be_a OffenderSARCaseForm
       expect(assigns(:case_types)).to match_array %w[Case::SAR::OffenderComplaint]
     end
   end
 
   describe 'transitions' do
-    OFFENDER_SAR_STATES = {
+    OFFENDER_SAR_COMPLAINT_STATES = {
       data_to_be_requested: :mark_as_waiting_for_data,
       waiting_for_data: :mark_as_ready_for_vetting,
       ready_for_vetting: :mark_as_vetting_in_progress,
@@ -78,7 +77,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
       ready_to_dispatch: :close,
     }.freeze
 
-    OFFENDER_SAR_STATES.each do |state, transition_event|
+    OFFENDER_SAR_COMPLAINT_STATES.each do |state, transition_event|
       context "with Offender SAR in #{state} state" do
         it_behaves_like 'edit offender sar spec', state.to_sym, transition_event
       end

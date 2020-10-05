@@ -12,25 +12,25 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          element :subject_full_name, '#offender_sar_subject_full_name'
+          element :subject_full_name, '#offender_sar_complaint_subject_full_name'
 
-          element :prison_number, '#offender_sar_prison_number'
+          element :prison_number, '#offender_sar_complaint_prison_number'
 
-          element :subject_aliases, '#offender_sar_subject_aliases'
+          element :subject_aliases, '#offender_sar_complaint_subject_aliases'
 
-          element :previous_case_numbers, '#offender_sar_previous_case_numbers'
+          element :previous_case_numbers, '#offender_sar_complaint_previous_case_numbers'
 
-          element :other_subject_ids, '#offender_sar_other_subject_ids'
+          element :other_subject_ids, '#offender_sar_complaint_other_subject_ids'
 
-          element :case_reference_number, '#offender_sar_case_reference_number'
+          element :case_reference_number, '#offender_sar_complaint_case_reference_number'
 
-          element :date_of_birth_dd, '#offender_sar_date_of_birth_dd'
+          element :date_of_birth_dd, '#offender_sar_complaint_date_of_birth_dd'
 
-          element :date_of_birth_mm, '#offender_sar_date_of_birth_mm'
+          element :date_of_birth_mm, '#offender_sar_complaint_date_of_birth_mm'
 
-          element :subject_address, '#offender_sar_subject_address'
+          element :subject_address, '#offender_sar_complaint_subject_address'
 
-          element :date_of_birth_yyyy, '#offender_sar_date_of_birth_yyyy'
+          element :date_of_birth_yyyy, '#offender_sar_complaint_date_of_birth_yyyy'
 
           element :submit_button, '.button'
 
@@ -46,8 +46,8 @@ module PageObjects
             other_subject_ids.set kase.other_subject_ids
             case_reference_number.set kase.case_reference_number
 
-            choose('offender_sar_subject_type_offender', visible: false)
-            choose('offender_sar_flag_as_high_profile_false', visible: false)
+            choose('offender_sar_complaint_subject_type_offender', visible: false)
+            choose('offender_sar_complaint_flag_as_high_profile_false', visible: false)
           end
 
           def set_date_of_birth(date_of_birth)
