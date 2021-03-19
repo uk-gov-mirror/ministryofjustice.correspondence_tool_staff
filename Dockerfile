@@ -21,7 +21,7 @@ RUN gem install bundler -v '~> 2.2.13'
 
 RUN bundle config set --global frozen 1 && \
     bundle config set without 'development test' && \
-    bundle install  
+    bundle install
 
 COPY . .
 
@@ -37,6 +37,7 @@ EXPOSE $PUMA_PORT
 
 RUN chown -R appuser:appgroup ./*
 RUN chmod +x /usr/src/app/config/docker/*
+RUN alias bash="ash"
 
 # expect/add ping environment variables
 ARG VERSION_NUMBER
