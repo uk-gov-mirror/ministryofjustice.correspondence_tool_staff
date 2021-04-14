@@ -1,4 +1,6 @@
-h2.request--heading Conversation
+h2.request--heading 
+  label for="case_message_text" 
+    = 'Conversation'
 
 = GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
